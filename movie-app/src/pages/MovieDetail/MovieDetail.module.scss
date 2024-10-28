@@ -1,0 +1,154 @@
+.movieDetailContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+  max-width: 1200px;
+  margin: 20px auto; /* 중앙 정렬 */
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+
+  .posterContainer {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #ffd700; /* 포스터 아래 선 */
+    padding-bottom: 20px;
+    flex-direction: column; /* 모바일에서 세로로 배치 */
+
+    @media (min-width: 769px) {
+      flex-direction: row; /* 큰 화면에서는 가로로 배치 */
+    }
+  }
+
+  .moviePoster {
+    width: 15%; /* 포스터 크기 조정 */
+    height: auto;
+    border-radius: 10px;
+    transition: transform 0.3s, box-shadow 0.3s; /* 효과 추가 */
+    margin-right: 20px; /* 오른쪽 여백 추가 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+    @media (max-width: 768px) {
+      width: 80%; /* 모바일에서 포스터 크기 조정 */
+      margin-right: 0; /* 여백 제거 */
+      margin-bottom: 20px; /* 아래 여백 추가 */
+    }
+  }
+
+  .movieInfo {
+    flex: 1;
+    padding-left: 20px;
+
+    @media (max-width: 768px) {
+      padding-left: 0; /* 모바일에서는 패딩 제거 */
+      text-align: center; /* 텍스트 가운데 정렬 */
+    }
+  }
+
+  .movieTitle {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffd700;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  }
+
+  .movieTagline {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #b0b0b0;
+  }
+
+  .movieReservationRate,
+  .movieReleaseDate,
+  .movieRuntime,
+  .movieGenre,
+  .movieDirector,
+  .movieCast {
+    font-size: 1.1rem;
+    margin: 5px 0;
+  }
+
+  .movieOverview {
+    margin-top: 20px;
+  }
+
+  .movieOverview h2 {
+    font-size: 1.5rem;
+    color: #ffd700;
+    margin-bottom: 10px;
+  }
+}
+
+.stillandVideo {
+  .movieImages,
+  .movieTrailers {
+    margin-top: 20px;
+  }
+
+  .movieImages h2,
+  .movieTrailers h2 {
+    font-size: 2rem;
+    color: #ffd700;
+  }
+
+  .imageContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .backdropImage {
+    width: 18%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+
+    @media (max-width: 768px) {
+      width: 45%; /* 모바일에서 스틸컷 크기 조정 */
+    }
+
+    @media (max-width: 480px) {
+      width: 90%; /* 작은 화면에서 스틸컷 크기 조정 */
+    }
+  }
+
+  .backdropImage:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  }
+
+  .trailerContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .trailerItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex: 1 1;
+  }
+
+  .trailerVideo {
+    object-fit: cover;
+    top: 0;
+    left: 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  .trailerItem h3 {
+    color: #ffd700;
+    margin-bottom: 8px;
+  }
+}

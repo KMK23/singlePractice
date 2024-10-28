@@ -1,0 +1,46 @@
+.seatSelectionContainer {
+  text-align: center;
+}
+
+.seatLayout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.rowLabel {
+  width: 30px; // 행 레이블의 너비
+  font-weight: bold;
+}
+
+.seat {
+  width: 30px;
+  height: 30px;
+  margin: 0 5px;
+  background-color: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.seat:hover {
+  background-color: #bbb; // Hover 시 색상 변화
+}
+
+.selected {
+  background-color: #ffd700; // 선택된 좌석 색상
+  color: white;
+}
+
+.selectedSeats {
+  margin-top: 20px;
+}

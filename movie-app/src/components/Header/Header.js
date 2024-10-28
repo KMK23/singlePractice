@@ -16,6 +16,10 @@ function Header(props) {
           <Link to={"signUp"}>
             <Button>회원가입</Button>
           </Link>
+          <Link to={"booking"}>
+            <Button>예매하기</Button>
+          </Link>
+
           <Link to={"myPage"}>
             <Button>마이페이지</Button>
           </Link>

@@ -1,0 +1,29 @@
+.mainContainer {
+  padding: 1.25rem;
+
+  .mainTitle {
+    font-size: 2rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+
+  .mainMovieGrid {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.25rem;
+  }
+
+  .mainMovieCard {
+    width: 18%; // 영화 카드의 너비를 18%로 설정
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
