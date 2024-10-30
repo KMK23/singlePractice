@@ -5,6 +5,7 @@ import Layout from "./pages/Layout/Layout";
 import Movie from "./pages/Movie/Movie";
 import MovieDetail from "./pages/MovieDetail/MovieDetail";
 import BookingPage from "./pages/BookingPage/BookingPage";
+import Reservation from "./pages/Reservation/Reservation";
 function App() {
   return (
     <BrowserRouter>
@@ -13,8 +14,8 @@ function App() {
           <Route index element={<MovieList />} />
           <Route path="movie" element={<Movie />} />
           <Route path="/movie/:id" element={<MovieDetail />} />
-          <Route path="/booking" element={<BookingPage />} />{" "}
-          {/* 예매 페이지 */}
+          <Route path="/Reservation" element={<Reservation />} />
+          <Route path="/booking" element={<BookingPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

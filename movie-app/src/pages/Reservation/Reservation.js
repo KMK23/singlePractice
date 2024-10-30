@@ -1,7 +1,62 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import styles from "./Reservation.module.scss";
+import {
+  fetchMovies,
+  selectMovies,
+  selectLoading,
+  selectError,
+} from "../../store/movieSlice/MovieSlice";
+import MovieSelection from "../../components/movieSelction/MovieSelection";
 
-function Reservation(props) {
-  return <div></div>;
+function Reservation() {
+  const dispatch = useDispatch();
+  const movies = useSelector(selectMovies);
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
+
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [selectedRegion, setSelectedRegion] = useState(null);
+  const [selectedTheater, setSelectedTheater] = useState(null);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState(null);
+
+  useEffect(() => {
+    dispatch(fetchMovies());
+  }, [dispatch]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <div className={styles.ReservationContainer}>
+      <h1>영화 예약</h1>
+      <div className={styles.ReservationSteps}>
+        <MovieSelection movies={movies} setSelectedMovie={setSelectedMovie} />
+        {/* <RegionSelection
+          selectedRegion={selectedRegion}
+          setSelectedRegion={setSelectedRegion}
+          selectedMovie={selectedMovie}
+        /> */}
+        {/* <TheaterSelection
+          selectedRegion={selectedRegion}
+          selectedTheater={selectedTheater}
+          setSelectedTheater={setSelectedTheater}
+        />
+        <DateSelection
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+        />
+        <TimeSelection
+          selectedMovie={selectedMovie}
+          selectedTheater={selectedTheater}
+          selectedDate={selectedDate}
+          selectedTime={selectedTime}
+          setSelectedTime={setSelectedTime}
+        /> */}
+      </div>
+    </div>
+  );
 }
 
 export default Reservation;
