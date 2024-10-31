@@ -1,16 +1,24 @@
-// src/pages/MovieList/MovieList.js
-import React, { useState } from "react";
-import { useSelector } from "react-redux"; // Redux에서 상태를 가져오기 위해 추가
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchMovies,
+  selectMovies,
+  selectLoading,
+} from "../../store/movieSlice/MovieSlice"; // 선택자 추가
 import styles from "./MovieList.module.scss";
 import MovieDetail from "../Movie/Movie";
 import Pagination from "@mui/material/Pagination";
-import { selectMovies, selectLoading } from "../../store/movieSlice/MovieSlice"; // 선택자 추가
 
 function MovieList() {
+  const dispatch = useDispatch();
   const movies = useSelector(selectMovies); // Redux 상태에서 영화 목록 가져오기
   const loading = useSelector(selectLoading); // Redux 상태에서 로딩 상태 가져오기
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
+
+  useEffect(() => {
+    dispatch(fetchMovies()); // 컴포넌트가 마운트될 때 영화 데이터를 가져옵니다.
+  }, [dispatch]);
 
   const handleChange = (event, value) => {
     setPage(value);

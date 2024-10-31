@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import ReservationSlice from "../pages/Reservation/Reservation";
 import movieSlice from "./movieSlice/MovieSlice";
+import ReservationSlice from "./reservationSlice/reservationSlice";
 const store = configureStore({
   reducer: {
     movies: movieSlice,
-    Reservation: ReservationSlice,
+    reservation: ReservationSlice,
   },
 });
 export default store;

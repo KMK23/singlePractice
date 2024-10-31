@@ -8,6 +8,9 @@ import {
   selectError,
 } from "../../store/movieSlice/MovieSlice";
 import MovieSelection from "../../components/movieSelction/MovieSelection";
+import RegionSelection from "../../components/regionSelection/RegionSelection";
+import DateSelection from "../../components/dateSelection/DateSelection";
+import TimeSelection from "../../components/timeSelection/TimeSelection";
 
 function Reservation() {
   const dispatch = useDispatch();
@@ -32,28 +35,24 @@ function Reservation() {
     <div className={styles.ReservationContainer}>
       <h1>영화 예약</h1>
       <div className={styles.ReservationSteps}>
-        <MovieSelection movies={movies} setSelectedMovie={setSelectedMovie} />
-        {/* <RegionSelection
+        <MovieSelection
+          movies={movies}
+          setSelectedMovie={setSelectedMovie}
+          selectedMovie={selectedMovie}
+        />
+        <RegionSelection
           selectedRegion={selectedRegion}
           setSelectedRegion={setSelectedRegion}
           selectedMovie={selectedMovie}
-        /> */}
-        {/* <TheaterSelection
-          selectedRegion={selectedRegion}
-          selectedTheater={selectedTheater}
-          setSelectedTheater={setSelectedTheater}
         />
         <DateSelection
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
         />
         <TimeSelection
-          selectedMovie={selectedMovie}
-          selectedTheater={selectedTheater}
-          selectedDate={selectedDate}
           selectedTime={selectedTime}
           setSelectedTime={setSelectedTime}
-        /> */}
+        />
       </div>
     </div>
   );

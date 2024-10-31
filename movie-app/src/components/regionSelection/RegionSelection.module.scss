@@ -1,0 +1,66 @@
+.ButtonGroup {
+  display: flex;
+  gap: 3rem; /* 지역 버튼과 극장 버튼 그룹 간의 간격 */
+}
+
+.RegionButtonGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem; /* 버튼 간의 간격 */
+}
+
+.RegionButton {
+  padding: 0 1.5rem; /* 상하 1rem, 좌우 1.5rem 여백 */
+  font-size: 1rem; /* 기본 폰트 크기 */
+  border: 1px solid #ddd; /* 기본 테두리 */
+  border-radius: 0.5rem; /* 둥근 모서리 */
+  cursor: pointer;
+  transition: color 0.3s, transform 0.3s; /* 부드러운 전환 효과 */
+  height: 6rem;
+
+  &.selected {
+    color: white; /* 선택된 버튼의 텍스트 색상 */
+    transform: scale(1.05); /* 선택된 버튼을 약간 확대 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  }
+
+  &:hover {
+    /* hover 시 색상 변화 없음 */
+    color: #007bff; /* hover 시 텍스트 색상 */
+  }
+}
+
+.TheaterButtonGroup {
+  display: flex;
+  flex-direction: column; /* 극장 버튼은 세로로 배치 */
+  margin-top: 1rem; /* 극장 버튼과 지역 버튼 간의 간격 */
+  margin: 0;
+  width: 12rem; /* 버튼 그룹의 폭 설정 */
+}
+
+.TheaterTitle {
+  font-size: 1.25rem; /* 극장 제목 폰트 크기 */
+  font-weight: bold; /* 제목 두껍게 */
+  margin-bottom: 1rem; /* 제목과 버튼 간의 간격 */
+}
+
+.TheaterButton {
+  padding: 1rem 1.5rem; /* 상하 1rem, 좌우 1.5rem 여백 */
+  font-size: 1rem; /* 기본 폰트 크기 */
+  border: 1px solid #ddd; /* 기본 테두리 */
+  border-radius: 0.5rem; /* 둥근 모서리 */
+  cursor: pointer;
+  transition: color 0.3s, transform 0.3s; /* 부드러운 전환 효과 */
+  margin-bottom: 0.5rem; /* 극장 버튼 간 간격 */
+
+  &.selected {
+    color: white; /* 선택된 버튼의 텍스트 색상 */
+    transform: scale(1.05); /* 선택된 버튼을 약간 확대 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  }
+
+  &:hover {
+    /* hover 시 색상 변화 없음 */
+    color: #007bff; /* hover 시 텍스트 색상 */
+  }
+}

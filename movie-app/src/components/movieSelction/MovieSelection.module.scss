@@ -1,0 +1,73 @@
+.movieSelectBtnBox {
+  display: flex;
+  flex-direction: column; /* 세로로 나열 */
+  gap: 1rem; /* 카드 간 간격 */
+}
+
+.movieCard {
+  cursor: pointer;
+  border: 1px solid #e0e0e0; /* 기본 테두리 */
+  border-radius: 0.5rem; /* 모서리 둥글게 */
+  transition: box-shadow 0.3s, transform 0.2s; /* transform 애니메이션 추가 */
+  padding: 1rem; /* 카드 내 여백 */
+  display: flex; /* Flexbox 사용 */
+  justify-content: center; /* 중앙 정렬 */
+  min-height: 4rem; /* 최소 높이 설정 */
+  width: 100%; /* 너비를 100%로 설정 */
+  width: 18rem;
+  overflow: hidden; /* 넘치는 텍스트 숨기기 */
+  text-overflow: ellipsis; /* 넘치는 텍스트에 줄임표(...) 추가 */
+  white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+
+  &:hover {
+    box-shadow: 0px 0.5rem 1.5rem rgba(0, 0, 0, 0.2); /* hover 시 그림자 효과 */
+    transform: translateY(-0.2rem); /* hover 시 살짝 위로 이동 */
+  }
+
+  &.selected {
+    background-color: #007bff; /* 선택된 카드 색상 */
+    color: white;
+
+    /* 선택된 상태에서 텍스트 색상 */
+    h6 {
+      color: white; /* 선택된 카드의 텍스트 색상 */
+    }
+  }
+}
+
+.cardContent {
+  display: flex; /* Flexbox를 사용하여 내용 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center; /* 중앙 정렬 */
+  width: 100%; /* 가로 폭을 100%로 설정하여 제목이 길어도 유지 */
+}
+
+.movieTitleName {
+  font-size: 1rem; /* 텍스트 크기 조정 */
+  margin: 0; /* 기본 여백 제거 */
+  font-weight: 600; /* 텍스트 두께 */
+  color: white;
+  text-align: center; /* 텍스트 중앙 정렬 */
+  overflow: hidden; /* 넘치는 텍스트 숨기기 */
+  text-overflow: ellipsis; /* 넘치는 텍스트에 줄임표(...) 추가 */
+  white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+}
+
+.showMoreButton {
+  margin-top: 1rem; /* 버튼과 영화 목록 간의 간격 */
+  width: 100%; /* 버튼 너비를 100%로 */
+  min-height: 3rem; /* 최소 높이 설정 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  padding: 0.5rem; /* 버튼 내부 여백 */
+  border: none; /* 기본 테두리 제거 */
+  border-radius: 0.25rem; /* 모서리 둥글게 */
+  background-color: #007bff; /* 버튼 배경색 */
+  color: white; /* 버튼 텍스트 색상 */
+  font-weight: bold; /* 글자 두께를 증가시켜 강조 */
+  cursor: pointer; /* 마우스 포인터 변경 */
+  transition: background-color 0.3s; /* 배경색 변화 애니메이션 */
+
+  &:hover {
+    background-color: #0056b3; /* hover 시 배경색 변화 */
+  }
+}

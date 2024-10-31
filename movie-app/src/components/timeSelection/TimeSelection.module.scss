@@ -1,0 +1,33 @@
+.TimeSelectionContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.Title {
+  margin-bottom: 10px;
+}
+
+.TimeButtonGroup {
+  display: flex;
+  flex-wrap: wrap; /* 버튼이 한 줄에 모두 들어가지 않으면 다음 줄로 넘김 */
+  gap: 10px; /* 버튼 간의 간격 */
+  flex-direction: column;
+}
+
+.TimeButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+
+  &.selected {
+    background-color: #007bff;
+    color: white;
+  }
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
