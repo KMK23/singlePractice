@@ -22,11 +22,12 @@
     color: white; /* 선택된 버튼의 텍스트 색상 */
     transform: scale(1.05); /* 선택된 버튼을 약간 확대 */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    background-color: #007bff;
   }
 
   &:hover {
     /* hover 시 색상 변화 없음 */
-    color: #007bff; /* hover 시 텍스트 색상 */
+    color: white; /* hover 시 텍스트 색상 */
   }
 }
 
@@ -57,10 +58,11 @@
     color: white; /* 선택된 버튼의 텍스트 색상 */
     transform: scale(1.05); /* 선택된 버튼을 약간 확대 */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    background-color: #007bff;
   }
 
   &:hover {
     /* hover 시 색상 변화 없음 */
-    color: #007bff; /* hover 시 텍스트 색상 */
+    color: white; /* hover 시 텍스트 색상 */
   }
 }

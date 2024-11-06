@@ -11,6 +11,7 @@ import MovieSelection from "../../components/movieSelction/MovieSelection";
 import RegionSelection from "../../components/regionSelection/RegionSelection";
 import DateSelection from "../../components/dateSelection/DateSelection";
 import TimeSelection from "../../components/timeSelection/TimeSelection";
+import { Link } from "react-router-dom";
 
 function Reservation() {
   const dispatch = useDispatch();
@@ -28,6 +29,14 @@ function Reservation() {
     dispatch(fetchMovies());
   }, [dispatch]);
 
+  // 모든 항목이 선택되었는지 확인하는 변수
+  const isAllSelected =
+    selectedMovie &&
+    selectedRegion &&
+    selectedTheater &&
+    selectedDate &&
+    selectedTime;
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -43,7 +52,8 @@ function Reservation() {
         <RegionSelection
           selectedRegion={selectedRegion}
           setSelectedRegion={setSelectedRegion}
-          selectedMovie={selectedMovie}
+          selectedTheater={selectedTheater}
+          setSelectedTheater={setSelectedTheater}
         />
         <DateSelection
           selectedDate={selectedDate}
@@ -54,6 +64,11 @@ function Reservation() {
           setSelectedTime={setSelectedTime}
         />
       </div>
+      {isAllSelected && ( // 모든 항목이 선택되었을 때만 버튼 표시
+        <div className={styles.ReservationButton}>
+          <Link to={"/SeatSelection"}>좌석선택하기</Link>
+        </div>
+      )}
     </div>
   );
 }

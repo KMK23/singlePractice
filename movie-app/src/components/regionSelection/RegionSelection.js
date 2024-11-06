@@ -1,29 +1,21 @@
 import React from "react";
 import styles from "./RegionSelection.module.scss";
-import { cgvTheaters } from "../../CGV"; // theaters 데이터 파일
-import { useDispatch, useSelector } from "react-redux";
-import {
-  selectRegion,
-  selectTheater,
-} from "../../store/reservationSlice/reservationSlice";
+import { cgvTheaters } from "../../CGV";
 
-function RegionSelection() {
-  const dispatch = useDispatch();
-  const selectedRegion = useSelector(
-    (state) => state.reservation.selectedRegion
-  );
-  const selectedTheater = useSelector(
-    (state) => state.reservation.selectedTheater
-  );
-
+function RegionSelection({
+  selectedRegion,
+  setSelectedRegion,
+  selectedTheater,
+  setSelectedTheater,
+}) {
   // 지역 버튼 클릭 핸들러
   const handleRegionClick = (region) => {
-    dispatch(selectRegion(region)); // Redux 액션으로 상태 업데이트
+    setSelectedRegion(region); // props로 전달된 setSelectedRegion을 사용하여 상태 업데이트
   };
 
   // 극장 버튼 클릭 핸들러
   const handleTheaterClick = (theater) => {
-    dispatch(selectTheater(theater)); // Redux 액션으로 상태 업데이트
+    setSelectedTheater(theater); // props로 전달된 setSelectedTheater를 사용하여 상태 업데이트
   };
 
   // 선택된 지역의 극장 목록 필터링

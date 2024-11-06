@@ -1,0 +1,114 @@
+.SeatSelectionContainer {
+  max-width: 80rem;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #1e1e1e;
+  color: white;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+
+  h1 {
+    margin-bottom: 2rem;
+  }
+
+  .Screen {
+    background-color: #333;
+    color: #fff;
+    font-size: 1.2rem;
+    padding: 0.8rem;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .AisleSpace {
+    height: 2rem; /* 스크린과 A열 사이의 여유 공간 */
+  }
+
+  .SeatGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .Row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 1rem repeat(8, 1fr) 1rem repeat(
+        4,
+        1fr
+      ); // 좌석 + 통로
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .Seat {
+    background-color: #444;
+    color: white;
+    padding: 0.8rem;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &.selected {
+      background-color: #f39c12;
+      color: black;
+    }
+
+    &:hover {
+      background-color: #555;
+    }
+  }
+
+  .VerticalAisle {
+    background-color: transparent;
+  }
+
+  .SelectedSeats {
+    margin-top: 1rem;
+    h2 {
+      font-size: 1.2rem;
+      color: #f39c12;
+    }
+  }
+
+  .EntryExit {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    font-size: 1.2rem;
+    color: white;
+    .Entry,
+    .Exit {
+      background-color: green;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+    }
+
+    .Entry {
+      text-align: left;
+    }
+
+    .Exit {
+      text-align: right;
+    }
+  }
+
+  button {
+    margin-top: 1.5rem;
+    background-color: #f39c12;
+    color: black;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #e67e22;
+    }
+  }
+}

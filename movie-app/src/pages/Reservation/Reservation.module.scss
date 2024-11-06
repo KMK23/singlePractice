@@ -1,21 +1,37 @@
 .ReservationContainer {
   max-width: 75rem;
   margin: 10rem auto;
-  background-color: #1e1e1e; // 어두운 배경색
-  color: white; // 흰색 텍스트
-  border-radius: 10px; // 둥근 모서리
-  padding: 2rem; // 패딩 추가
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); // 그림자 추가
+  background-color: #1e1e1e;
+  color: white;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  position: relative;
 
   h1 {
-    text-align: center; // 제목 중앙 정렬
-    margin-bottom: 2rem; // 제목 아래 여백
+    text-align: center;
+    margin-bottom: 2rem;
   }
 
   .ReservationSteps {
-    display: flex; // Flexbox 사용
-    gap: 2rem; // 영역 간격 조정
+    display: flex;
+    gap: 2rem;
     flex-wrap: wrap;
     justify-content: space-between;
+  }
+
+  .ReservationButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    background-color: white;
+    border-radius: 8px; /* 버튼 스타일 변경 */
+    padding: 1rem;
+    margin: 2rem auto 0; /* 버튼을 중앙 정렬하고 간격 조정 */
+
+    button {
+      color: black;
+    }
   }
 }
