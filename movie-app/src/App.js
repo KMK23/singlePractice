@@ -7,7 +7,7 @@ import MovieDetail from "./pages/MovieDetail/MovieDetail";
 import BookingPage from "./pages/BookingPage/BookingPage";
 import Reservation from "./pages/Reservation/Reservation";
 import SeatSelection from "./pages/SeatSelection/SeatSelection";
-import Login from "./pages/Login/Login";
+import LoginPage from "./pages/Login/LoginPage";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<MovieList />} />
           <Route path="movie" element={<Movie />} />
-          <Route path="Login" element={<Login />} />
+          <Route path="Login" element={<LoginPage />} />
           <Route path="/movie/:id" element={<MovieDetail />} />
           <Route path="/Reservation" element={<Reservation />} />
           <Route path="/SeatSelection" element={<SeatSelection />} />

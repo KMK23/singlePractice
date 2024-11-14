@@ -6,7 +6,7 @@ const store = configureStore({
   reducer: {
     movies: movieSlice,
     reservation: ReservationSlice,
-    userSlice,
+    user: userSlice,
   },
 });
 export default store;

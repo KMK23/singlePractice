@@ -1,0 +1,82 @@
+// LoginPage.module.scss
+.loginPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #000;
+  color: #fff;
+  .formContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #1a1a1a;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+  }
+
+  .title {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #ffffff;
+  }
+
+  .input {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    font-size: 1rem;
+  }
+
+  .input::placeholder {
+    color: #bbb;
+  }
+
+  .button {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    background-color: #4caf50;
+    color: #fff;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .button:hover {
+    background-color: #45a049;
+  }
+
+  .toggleButton {
+    margin-top: 1rem;
+    color: #4caf50;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .toggleButton:hover {
+    color: #45a049;
+  }
+
+  .message {
+    color: #ffffff;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+  }
+
+  .errorMessage {
+    color: #ff4444;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+  }
+}

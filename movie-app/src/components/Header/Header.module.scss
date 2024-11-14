@@ -1,34 +1,66 @@
 .headerContainer {
   background-color: #111; // 검정색 배경
-  padding: 0.9rem 2rem; // 상하 및 좌우 패딩
+  padding: 1.2rem 2.5rem; // 상하 및 좌우 패딩
   display: flex;
   justify-content: space-between; // 아이템을 양 끝으로 배치
   align-items: center;
   border-bottom: 2px solid rgba(255, 255, 255, 0.1); // 하단 경계선
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); // 살짝 그림자 효과 추가
 
   .headerTitleBox {
     flex: 1;
+    display: flex;
+    justify-content: center; // 제목을 중앙에 배치
     .headerTitle {
-      margin: 0; // 마진 초기화
-      font-size: 2.5rem;
-      color: #ff4757; // 제목 색상
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); // 텍스트 그림자 추가
+      font-size: 2.8rem; // 제목 폰트 크기 증가
+      color: #ff4757; // 강조된 색상
+      font-family: "Roboto", sans-serif; // 고급스러운 서체
+      font-weight: 700; // 굵은 폰트
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2); // 텍스트 그림자 효과
     }
   }
 
   .menuContainer {
     flex: 1;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-end; // 메뉴 항목을 우측 정렬
     align-items: center;
 
     .menuBtn {
       display: flex;
-      gap: 30px; // 버튼 간격 조정
+      gap: 20px; // 버튼 간격을 좁히고
+      align-items: center; // 버튼들을 세로로 가운데 정렬
 
       a {
-        text-decoration: none; // 링크의 기본 스타일 제거
+        text-decoration: none; // 링크 기본 스타일 제거
       }
+
+      button {
+        padding: 10px 20px; // 버튼 내부 여백
+        background-color: #ff4757; // 버튼 배경색
+        color: #fff; // 버튼 글자색
+        font-size: 1.1rem; // 버튼 글자 크기
+        font-weight: 600; // 글자 굵기
+        border: none;
+        border-radius: 5px; // 둥근 모서리
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s; // 버튼 애니메이션 효과
+        text-transform: uppercase; // 버튼 텍스트를 대문자로 변환
+      }
+
+      button:hover {
+        background-color: #ff6b81; // 버튼 hover 시 색상 변경
+        transform: scale(1.05); // 마우스 오버시 크기 확장
+      }
+    }
+
+    .logoutBtn {
+      background-color: #e74c3c; // 빨간색 배경으로 로그아웃 버튼 강조
+      margin-left: 20px; // 다른 버튼과 간격을 두기 위해 좌측 여백 추가
+    }
+
+    .logoutBtn:hover {
+      background-color: #c0392b; // 로그아웃 버튼 hover 시 색상 변경
     }
   }
 }
