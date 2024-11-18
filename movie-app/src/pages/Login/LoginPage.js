@@ -1,4 +1,3 @@
-// LoginPage.js
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +8,7 @@ import {
   registerUser,
   selectUser,
 } from "../../store/userSlice/userSlice";
+
 function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,22 +24,19 @@ function LoginPage() {
     }
   }, [user, navigate]);
 
-  const handleLogin = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault(); // 기본 제출 동작 방지
     if (!email || !password) {
       setErrorMessage("이메일과 비밀번호를 모두 입력해주세요.");
       return;
     }
-    dispatch(loginUser({ email, password }));
-    setEmail("");
-    setPassword("");
-  };
 
-  const handleRegister = () => {
-    if (!email || !password) {
-      setErrorMessage("이메일과 비밀번호를 모두 입력해주세요.");
-      return;
+    if (isRegistering) {
+      dispatch(registerUser({ email, password }));
+    } else {
+      dispatch(loginUser({ email, password }));
     }
-    dispatch(registerUser({ email, password }));
+
     setEmail("");
     setPassword("");
   };
@@ -61,30 +58,26 @@ function LoginPage() {
         <h2 className={styles.title}>
           {isRegistering ? "회원가입 페이지" : "로그인 페이지"}
         </h2>
-        <input
-          type="email"
-          placeholder="이메일"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={styles.input}
-        />
-        <input
-          type="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={styles.input}
-        />
-
-        {isRegistering ? (
-          <button onClick={handleRegister} className={styles.button}>
-            회원가입
+        {/* form 태그 추가 */}
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={styles.input}
+          />
+          <input
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={styles.input}
+          />
+          <button type="submit" className={styles.button}>
+            {isRegistering ? "회원가입" : "로그인"}
           </button>
-        ) : (
-          <button onClick={handleLogin} className={styles.button}>
-            로그인
-          </button>
-        )}
+        </form>
 
         {user.status === "loading" && (
           <p className={styles.message}>처리 중...</p>

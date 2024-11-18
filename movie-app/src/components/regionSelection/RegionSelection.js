@@ -8,17 +8,14 @@ function RegionSelection({
   selectedTheater,
   setSelectedTheater,
 }) {
-  // 지역 버튼 클릭 핸들러
   const handleRegionClick = (region) => {
-    setSelectedRegion(region); // props로 전달된 setSelectedRegion을 사용하여 상태 업데이트
+    setSelectedRegion(region);
   };
 
-  // 극장 버튼 클릭 핸들러
   const handleTheaterClick = (theater) => {
-    setSelectedTheater(theater); // props로 전달된 setSelectedTheater를 사용하여 상태 업데이트
+    setSelectedTheater(theater);
   };
 
-  // 선택된 지역의 극장 목록 필터링
   const theatersInRegion =
     cgvTheaters.find((region) => region.region === selectedRegion)?.theaters ||
     [];
@@ -26,7 +23,6 @@ function RegionSelection({
   return (
     <div className={styles.RegionSelectionContainer}>
       <div className={styles.ButtonGroup}>
-        {/* 지역 선택 버튼 */}
         <div className={styles.RegionButtonGroup}>
           {cgvTheaters.map((region) => (
             <button
@@ -41,7 +37,6 @@ function RegionSelection({
           ))}
         </div>
 
-        {/* 선택된 지역의 극장 목록 */}
         {theatersInRegion.length > 0 && (
           <div className={styles.TheaterButtonGroup}>
             <h3 className={styles.TheaterTitle}>{selectedRegion}</h3>

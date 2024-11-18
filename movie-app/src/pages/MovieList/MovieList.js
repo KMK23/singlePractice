@@ -8,6 +8,7 @@ import {
 import styles from "./MovieList.module.scss";
 import MovieDetail from "../Movie/Movie";
 import Pagination from "@mui/material/Pagination";
+import { loginUser } from "../../store/userSlice/userSlice";
 
 function MovieList() {
   const dispatch = useDispatch();
@@ -15,7 +16,6 @@ function MovieList() {
   const loading = useSelector(selectLoading); // Redux 상태에서 로딩 상태 가져오기
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
-
   useEffect(() => {
     dispatch(fetchMovies()); // 컴포넌트가 마운트될 때 영화 데이터를 가져옵니다.
   }, [dispatch]);

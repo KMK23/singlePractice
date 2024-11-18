@@ -5,7 +5,7 @@ function DateSelection({ selectedDate, setSelectedDate }) {
   const dates = Array.from({ length: 7 }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() + i);
-    return date.toISOString().split("T")[0]; // "YYYY-MM-DD" 형식
+    return date.toISOString().split("T")[0];
   });
 
   return (

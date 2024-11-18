@@ -102,4 +102,48 @@ async function deleteDatas(collectionName, docId) {
     return false; // 삭제 실패 시 false 반환
   }
 }
-export { auth, db, analytics, getDatas, addDatas, updateDatas, deleteDatas };
+
+async function addPaymentHistory(
+  collectionName,
+  docId,
+  paymentInfo,
+  reservationData
+) {
+  try {
+    // Firestore에서 해당 문서를 참조
+    const docRef = doc(db, collectionName, docId);
+    const docSnapshot = await getDoc(docRef);
+
+    // 문서가 존재할 경우
+    if (docSnapshot.exists()) {
+      const docData = docSnapshot.data();
+      // 기존 결제 내역이 있으면 배열로 가져오고, 없으면 빈 배열로 초기화
+      const paymentHistory = docData.paymentHistory || [];
+
+      // 새로운 결제 정보를 배열에 추가
+      paymentHistory.push(paymentInfo);
+
+      // 결제 내역과 예약 정보 업데이트
+      await updateDoc(docRef, {
+        paymentHistory: paymentHistory, // 결제 내역 업데이트
+        reservationInfo: reservationData, // 예약 정보 저장
+      });
+      console.log("결제 내역과 예약 정보가 성공적으로 추가되었습니다.");
+    } else {
+      console.error("문서가 존재하지 않습니다");
+    }
+  } catch (error) {
+    console.error("결제 내역 추가 중 오류 발생: ", error);
+  }
+}
+
+export {
+  auth,
+  db,
+  analytics,
+  getDatas,
+  addDatas,
+  updateDatas,
+  deleteDatas,
+  addPaymentHistory,
+};

@@ -19,7 +19,7 @@ function App() {
           <Route path="Login" element={<LoginPage />} />
           <Route path="/movie/:id" element={<MovieDetail />} />
           <Route path="/Reservation" element={<Reservation />} />
-          <Route path="/SeatSelection" element={<SeatSelection />} />
+          <Route path="SeatSelection" element={<SeatSelection />} />
         </Route>
       </Routes>
     </BrowserRouter>

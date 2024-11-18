@@ -1,19 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { logoutUser, selectUser } from "../../store/userSlice/userSlice";
 import Button from "./../Button/Button";
 import styles from "./Header.module.scss";
 
-function Header(props) {
-  const [user, setUser] = useState(null);
-
+function Header() {
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser); // Redux 상태에서 user 정보 가져오기
+  const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
+  const navigate = useNavigate();
   useEffect(() => {
-    // localStorage에서 로그인 정보 확인
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      console.log(user);
-    }
-  }, []);
+    console.log("Redux 상태 변경 감지: isLoggedIn =", isLoggedIn);
+  }, [isLoggedIn]);
+
+  const handleLogout = () => {
+    console.log("로그아웃 버튼 클릭"); // 디버그 로그
+    dispatch(logoutUser())
+      .unwrap()
+      .then(() => {
+        console.log("로그아웃 성공"); // 디버그 로그
+        alert("로그아웃되었습니다.");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("로그아웃 실패:", error); // 디버그 로그
+      });
+  };
+
   return (
     <div className={styles.headerContainer}>
       <div className={styles.headerTitleBox}>
@@ -21,22 +35,20 @@ function Header(props) {
       </div>
       <div className={styles.menuContainer}>
         <div className={styles.menuBtn}>
-          {user ? (
-            // 로그인되어 있으면 사용자 정보 표시
-            <>
-              <span>{user.email}님, 환영합니다!</span>
-              <Link to={"myPage"}>
-                <Button>마이페이지</Button>
-              </Link>
-              <Link to={"reservation"}>
-                <Button>예매하기</Button>
-              </Link>
-              <Link to={"service"}>
-                <Button>고객센터</Button>
-              </Link>
-            </>
+          <Link to={"myPage"}>
+            <Button>마이페이지</Button>
+          </Link>
+          <Link to={"reservation"}>
+            <Button>예매하기</Button>
+          </Link>
+          <Link to={"service"}>
+            <Button>고객센터</Button>
+          </Link>
+
+          {/* 로그인 상태에 따라 버튼 표시 */}
+          {isLoggedIn ? (
+            <Button onClick={handleLogout}>로그아웃</Button>
           ) : (
-            // 로그인 안 되어 있으면 로그인/회원가입 버튼
             <Link to={"login"}>
               <Button>로그인/회원가입</Button>
             </Link>

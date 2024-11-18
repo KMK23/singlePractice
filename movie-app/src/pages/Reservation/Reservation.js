@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./Reservation.module.scss";
+import { addReservation } from "../../store/reservationSlice/reservationSlice";
 import {
   fetchMovies,
   selectMovies,
@@ -18,24 +19,63 @@ function Reservation() {
   const movies = useSelector(selectMovies);
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
+  const {
+    selectedMovie,
+    selectedRegion,
+    selectedTheater,
+    selectedDate,
+    selectedTime,
+    selectedSeats,
+  } = useSelector((state) => state.reservation);
 
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [selectedRegion, setSelectedRegion] = useState(null);
-  const [selectedTheater, setSelectedTheater] = useState(null);
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState(null);
+  const user = localStorage.getItem("email");
+  const [selectedMovieLocal, setSelectedMovieLocal] = useState(
+    selectedMovie || ""
+  );
+  const [selectedRegionLocal, setSelectedRegionLocal] = useState(
+    selectedRegion || ""
+  );
+  const [selectedTheaterLocal, setSelectedTheaterLocal] = useState(
+    selectedTheater || ""
+  );
+  const [selectedDateLocal, setSelectedDateLocal] = useState(
+    selectedDate || ""
+  );
+  const [selectedTimeLocal, setSelectedTimeLocal] = useState(
+    selectedTime || ""
+  );
 
   useEffect(() => {
     dispatch(fetchMovies());
   }, [dispatch]);
 
-  // 모든 항목이 선택되었는지 확인하는 변수
   const isAllSelected =
-    selectedMovie &&
-    selectedRegion &&
-    selectedTheater &&
-    selectedDate &&
-    selectedTime;
+    selectedMovieLocal &&
+    selectedRegionLocal &&
+    selectedTheaterLocal &&
+    selectedDateLocal &&
+    selectedTimeLocal.length > 0;
+
+  console.log("isAllSelected", isAllSelected); // 로그로 확인
+
+  const handleSubmitReservation = () => {
+    const userId = user;
+    const reservationData = {
+      selectedMovie: selectedMovieLocal,
+      selectedRegion: selectedRegionLocal,
+      selectedTheater: selectedTheaterLocal,
+      selectedDate: selectedDateLocal,
+      selectedTime: selectedTimeLocal,
+    };
+
+    dispatch(
+      addReservation({
+        collectionName: "users",
+        docId: userId,
+        updateObj: reservationData,
+      })
+    );
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -46,27 +86,39 @@ function Reservation() {
       <div className={styles.ReservationSteps}>
         <MovieSelection
           movies={movies}
-          setSelectedMovie={setSelectedMovie}
-          selectedMovie={selectedMovie}
+          selectedMovie={selectedMovieLocal}
+          setSelectedMovie={setSelectedMovieLocal}
         />
         <RegionSelection
-          selectedRegion={selectedRegion}
-          setSelectedRegion={setSelectedRegion}
-          selectedTheater={selectedTheater}
-          setSelectedTheater={setSelectedTheater}
+          selectedRegion={selectedRegionLocal}
+          setSelectedRegion={setSelectedRegionLocal}
+          selectedTheater={selectedTheaterLocal}
+          setSelectedTheater={setSelectedTheaterLocal}
         />
         <DateSelection
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
+          selectedDate={selectedDateLocal}
+          setSelectedDate={setSelectedDateLocal}
         />
         <TimeSelection
-          selectedTime={selectedTime}
-          setSelectedTime={setSelectedTime}
+          selectedTime={selectedTimeLocal}
+          setSelectedTime={setSelectedTimeLocal}
         />
       </div>
-      {isAllSelected && ( // 모든 항목이 선택되었을 때만 버튼 표시
+
+      {isAllSelected && (
         <div className={styles.ReservationButton}>
-          <Link to={"/SeatSelection"}>좌석선택하기</Link>
+          <Link
+            to="/SeatSelection"
+            state={{
+              selectedMovie: selectedMovieLocal,
+              selectedRegion: selectedRegionLocal,
+              selectedTheater: selectedTheaterLocal,
+              selectedDate: selectedDateLocal,
+              selectedTime: selectedTimeLocal,
+            }}
+          >
+            <button>좌석선택하기</button>
+          </Link>
         </div>
       )}
     </div>
