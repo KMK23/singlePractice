@@ -9,10 +9,9 @@ function Header() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser); // Redux 상태에서 user 정보 가져오기
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
+  console.log(user);
   const navigate = useNavigate();
-  useEffect(() => {
-    console.log("Redux 상태 변경 감지: isLoggedIn =", isLoggedIn);
-  }, [isLoggedIn]);
+  useEffect(() => {}, [user]);
 
   const handleLogout = () => {
     console.log("로그아웃 버튼 클릭"); // 디버그 로그
@@ -28,6 +27,15 @@ function Header() {
       });
   };
 
+  const handleProtectedNavigation = (path) => {
+    if (!isLoggedIn) {
+      alert("로그인 후 이용해주세요.");
+      navigate("/login");
+    } else {
+      navigate(path);
+    }
+  };
+
   return (
     <div className={styles.headerContainer}>
       <div className={styles.headerTitleBox}>
@@ -35,12 +43,12 @@ function Header() {
       </div>
       <div className={styles.menuContainer}>
         <div className={styles.menuBtn}>
-          <Link to={"myPage"}>
-            <Button>마이페이지</Button>
-          </Link>
-          <Link to={"reservation"}>
-            <Button>예매하기</Button>
-          </Link>
+          <Button onClick={() => handleProtectedNavigation("/myPage")}>
+            마이페이지
+          </Button>
+          <Button onClick={() => handleProtectedNavigation("/reservation")}>
+            예매하기
+          </Button>
           <Link to={"service"}>
             <Button>고객센터</Button>
           </Link>

@@ -14,16 +14,16 @@ function MovieSelection({ movies, setSelectedMovie, selectedMovie }) {
         <div
           key={movie.id}
           className={`${styles.movieCard} ${
-            selectedMovie === movie.title ? styles.selected : ""
+            selectedMovie === movie.id ? styles.selected : ""
           }`}
-          onClick={() => setSelectedMovie(movie.title)}
+          onClick={() => setSelectedMovie(movie)} // 영화 객체 { id, title } 전달
         >
           <div className={styles.cardContent}>
             <h6 className={styles.movieTitleName}>{movie.title}</h6>
           </div>
         </div>
       ))}
-      {visibleCount < movies.length && ( // 더보기 버튼이 표시될 조건
+      {visibleCount < movies.length && (
         <button onClick={handleShowMore} className={styles.showMoreButton}>
           더보기
         </button>

@@ -1,41 +1,46 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { updateDatas } from "../../firebase";
+import { getDatas, updateDatas } from "../../firebase";
 
 // 초기 상태
 const initialState = {
-  selectedMovie: null, // 선택한 영화
-  selectedRegion: null, // 선택한 지역
-  selectedTheater: null, // 선택한 극장
-  selectedDate: "", // 선택한 날짜
-  selectedTime: null, // 선택한 시간
-  selectedSeats: [], // 선택한 좌석
-  status: "idle", // 상태 관리 (idle, loading, succeeded, failed)
-  error: null, // 오류 메시지
+  selectedMovie: null, // 선택한 영화 정보 객체 { id, title }
+  selectedRegion: null,
+  selectedTheater: null,
+  selectedDate: "",
+  selectedTime: null,
+  selectedSeats: [],
+  reservedSeats: [], // 예약된 좌석
+  status: "idle",
+  error: null,
 };
 
-// Firestore에 예약 정보 저장하는 비동기 함수
-const addReservation = createAsyncThunk(
-  "reservation/addReservation",
-  async ({ collectionName, docId, updateObj }) => {
+// Firestore에서 예약된 좌석 가져오기
+const fetchReservedSeats = createAsyncThunk(
+  "reservation/fetchReservedSeats",
+  async ({ collectionName, queryOptions }) => {
     try {
-      const resultData = await updateDatas(collectionName, docId, updateObj);
-      return resultData;
+      const resultData = await getDatas(collectionName, queryOptions);
+      // 결과 데이터는 Firestore 문서 배열 형태이므로 필요한 좌석만 추출
+      return resultData[0]?.reservedSeats || [];
     } catch (error) {
-      console.error("error 메시지", error);
+      console.error("Error fetching reserved seats:", error);
+      throw error;
     }
   }
 );
 
-// 선택한 좌석 정보를 Firestore에 저장하는 비동기 함수
+// Firestore에 예약된 좌석 추가
 const addSeats = createAsyncThunk(
   "reservation/addSeats",
-  async ({ collectionName, docId, seats }) => {
+  async ({ collectionName, docId, newSeats }) => {
     try {
-      const updateObj = { selectedSeats: seats }; // 좌석 정보를 포함하는 객체
-      const resultData = await updateDatas(collectionName, docId, updateObj);
-      return resultData;
+      const resultData = await updateDatas(collectionName, docId, {
+        reservedSeats: newSeats,
+      });
+      return resultData.reservedSeats; // 업데이트된 좌석 반환
     } catch (error) {
-      console.error("좌석 저장 오류", error);
+      console.error("Error adding seats:", error);
+      throw error;
     }
   }
 );
@@ -44,65 +49,54 @@ const reservationSlice = createSlice({
   name: "reservation",
   initialState,
   reducers: {
-    // 영화 선택 액션
     selectMovie: (state, action) => {
       state.selectedMovie = action.payload;
     },
-    // 지역 선택 액션
     selectRegion: (state, action) => {
       state.selectedRegion = action.payload;
-      state.selectedTheater = null; // 새로운 지역 선택 시 극장 초기화
+      state.selectedTheater = null;
     },
-    // 극장 선택 액션
     selectTheater: (state, action) => {
       state.selectedTheater = action.payload;
     },
-    // 날짜 선택 액션
     selectDate: (state, action) => {
       state.selectedDate = action.payload;
     },
-    // 시간 선택 액션
     selectTime: (state, action) => {
       state.selectedTime = action.payload;
     },
-    // 좌석 선택 액션
     selectSeats: (state, action) => {
-      state.selectedSeats = action.payload; // 좌석 업데이트
+      state.selectedSeats = action.payload;
     },
-    // 전체 예약 상태 초기화
     resetReservation: () => initialState,
   },
   extraReducers: (builder) => {
     builder
-      .addCase(addReservation.pending, (state) => {
-        state.status = "loading"; // 비동기 요청 중 상태
+      .addCase(fetchReservedSeats.pending, (state) => {
+        state.status = "loading";
       })
-      .addCase(addReservation.fulfilled, (state, action) => {
-        state.status = "succeeded"; // 성공적으로 데이터 처리됨
-        state.selectedMovie = null;
-        state.selectedRegion = null;
-        state.selectedTheater = null;
-        state.selectedDate = "";
-        state.selectedTime = null;
+      .addCase(fetchReservedSeats.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.reservedSeats = action.payload;
       })
-      .addCase(addReservation.rejected, (state, action) => {
-        state.status = "failed"; // 실패 상태
-        state.error = action.payload;
+      .addCase(fetchReservedSeats.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       })
       .addCase(addSeats.pending, (state) => {
-        state.status = "loading"; // 비동기 요청 중 상태
+        state.status = "loading";
       })
       .addCase(addSeats.fulfilled, (state, action) => {
-        state.status = "succeeded"; // 성공적으로 좌석 정보 처리됨
+        state.status = "succeeded";
+        state.reservedSeats = action.payload;
       })
       .addCase(addSeats.rejected, (state, action) => {
-        state.status = "failed"; // 좌석 저장 실패 상태
-        state.error = action.payload;
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });
 
-// 액션 생성자와 리듀서 export
 export const {
   selectMovie,
   selectRegion,
@@ -111,7 +105,9 @@ export const {
   selectTime,
   selectSeats,
   resetReservation,
+  addReservation,
 } = reservationSlice.actions;
 
+// export const { selectMovie, selectRegion, selectTheater, selectDate, selectTime, selectSeats, resetReservation } = reservationSlice.actions;
 export default reservationSlice.reducer;
-export { addReservation, addSeats };
+export { addSeats, fetchReservedSeats };

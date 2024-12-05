@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./SeatSelection.module.scss";
 import Button from "../../components/Button/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as PortOne from "https://cdn.portone.io/v2/browser-sdk.esm.js";
-import { useDispatch } from "react-redux";
-import { addReservation } from "../../store/reservationSlice/reservationSlice"; // Redux 액션
-import { addPaymentHistory } from "../../firebase"; // Firestore 추가 함수
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchReservedSeats,
+  addSeats,
+} from "../../store/reservationSlice/reservationSlice"; // Redux 액션
+import { addDatas, addPaymentHistory } from "../../firebase"; // Firestore 추가 함수
 import { TextField } from "@mui/material";
 import kroDate from "../../components/korDate/KorDate";
+import { updateDoc } from "firebase/firestore";
 
 function SeatSelection() {
   const rows = Array.from({ length: 10 }, (_, i) =>
@@ -20,11 +24,34 @@ function SeatSelection() {
   const { state } = useLocation(); // 예약 정보 (영화, 장소, 시간 등)
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { reservedSeats } = useSelector((state) => state.reservation); // Redux에서 예약된 좌석 가져오기
+
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState(""); // 전화번호 상태
 
+  // 예약된 좌석 불러오기
+  useEffect(() => {
+    const { selectedMovie, selectedDate, selectedTime } = state;
+    dispatch(
+      fetchReservedSeats({
+        collectionName: "reservations",
+        queryOptions: {
+          conditions: [
+            { field: "movieId", operator: "==", value: selectedMovie.id },
+            { field: "date", operator: "==", value: selectedDate },
+            { field: "time", operator: "==", value: selectedTime },
+          ],
+        },
+      })
+    );
+  }, [dispatch, state]);
+
   const handleSeatClick = (seat) => {
+    if (reservedSeats.includes(seat)) {
+      alert("이 좌석은 이미 예약되었습니다.");
+      return; // 이미 예약된 좌석은 선택 불가
+    }
     setSelectedSeats((prevSelectedSeats) =>
       prevSelectedSeats.includes(seat)
         ? prevSelectedSeats.filter((s) => s !== seat)
@@ -35,12 +62,10 @@ function SeatSelection() {
   const handlePhoneChange = (e) => {
     let value = e.target.value.replace(/[^\d]/g, ""); // 숫자만 남기기
 
-    // '010'이 없으면 010을 자동으로 추가
     if (!value.startsWith("010")) {
       value = "010" + value;
     }
 
-    // 010 뒤에 -을 추가하고, 그 후 4자리마다 -을 추가
     if (value.length > 3 && value.length <= 7) {
       value = value.substring(0, 3) + "-" + value.substring(3, 7);
     } else if (value.length > 7) {
@@ -54,47 +79,80 @@ function SeatSelection() {
 
     setPhone(value); // 상태 업데이트
   };
+
   const handleSubmit = async () => {
-    // 사용자 정보 가져오기
     const user = JSON.parse(localStorage.getItem("user"));
     const userId = user ? user.docId : null;
 
-    // 이름, 전화번호, 좌석 선택 확인
     if (!name || !phone || selectedSeats.length === 0) {
       alert("이름, 전화번호, 그리고 좌석을 모두 선택해주세요.");
-      return; // 처리 종료
+      return;
     }
 
-    // 유효한 사용자 ID가 있을 경우 진행
     if (userId) {
       const seatPrice = 1000; // 예시로 1석당 1000원
-      const totalAmount = selectedSeats.length * seatPrice; // 총 금액 계산
+      const totalAmount = selectedSeats.length * seatPrice;
 
+      const email = user ? user.email : "";
       const reservationData = {
-        ...state,
         selectedSeats,
         name,
         phone,
         price: totalAmount,
-        selectedDate: state.selectedDate, // 날짜 추가
-        selectedMovie: state.selectedMovie, // 영화 이름 추가
-        selectedRegion: state.selectedRegion, // 지역 추가
-        selectedTheater: state.selectedTheater, // 극장 추가
-        selectedTime: state.selectedTime, // 시간 추가
+        selectedDate: state.selectedDate,
+        id: state.selectedMovie.id,
+        title: state.selectedMovie.title,
+        selectedRegion: state.selectedRegion,
+        selectedTheater: state.selectedTheater,
+        selectedTime: state.selectedTime,
+        email: email,
       };
 
-      // 결제 요청
+      console.log("예약 정보:", reservationData);
+
       const paymentInfo = await requestPayment(userId, reservationData);
 
       if (paymentInfo) {
-        // 결제 완료 후 처리
         alert("예약이 완료되었습니다.");
 
-        // 예약 정보 저장 (Firestore)
-        dispatch(addReservation(reservationData)); // Redux에 예약 정보 추가
-        await addPaymentHistory("users", userId, paymentInfo, reservationData); // 결제 내역과 예약 정보 Firestore에 저장
+        // 예약 정보(reservationInfo)는 'reservations' 컬렉션에 추가
+        const reservationDocRef = await addDatas("reservations", {
+          reservationInfo: {
+            ...reservationData, // reservationData 추가
+          },
+        });
 
-        navigate("/"); // 예약 성공 페이지로 이동
+        const reservationDocId = reservationDocRef.id; // Firestore 문서 ID 가져오기
+        console.log("예약 문서 ID:", reservationDocId); // ID가 제대로 출력되는지 확인
+
+        if (reservationDocId) {
+          // reservationData에 reservationDocId를 추가
+          const updatedReservationData = {
+            ...reservationData,
+            reservationDocId: reservationDocId, // reservationDocId를 추가
+          };
+
+          console.log("업데이트된 예약 데이터:", updatedReservationData); // updatedReservationData 확인
+
+          // 결제 내역(paymentHistory)은 'users' 컬렉션에 추가
+          await addPaymentHistory(
+            "users",
+            userId,
+            paymentInfo,
+            updatedReservationData
+          );
+
+          // 예약된 좌석 업데이트
+          await dispatch(
+            addSeats({
+              collectionName: "reservations",
+              docId: reservationDocId,
+              newSeats: [...reservedSeats, ...selectedSeats], // 선택된 좌석만 추가
+            })
+          );
+
+          navigate("/"); // 예약 성공 페이지로 이동
+        }
       }
     } else {
       console.error("사용자 정보가 없습니다.");
@@ -105,7 +163,7 @@ function SeatSelection() {
     const response = await PortOne.requestPayment({
       storeId: process.env.REACT_APP_STOREID,
       paymentId: `movie-${Date.now()}`,
-      orderName: `영화 ${reservationData.selectedMovie} 예약`,
+      orderName: `영화 ${reservationData.title} 예약`,
       totalAmount: reservationData.price,
       currency: "KRW",
       payMethod: "CARD",
@@ -129,7 +187,6 @@ function SeatSelection() {
       return null;
     }
   };
-
   return (
     <div className={styles.SeatSelectionContainer}>
       <h1>좌석 선택</h1>

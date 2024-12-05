@@ -68,7 +68,7 @@ async function getDatas(collectionName, queryOptions) {
 async function addDatas(collectionName, dataObj) {
   try {
     const docRef = await addDoc(getCollection(collectionName), dataObj);
-    return docRef.id;
+    return docRef;
   } catch (error) {
     console.error("Error adding document : ", error);
     throw new Error(error.message);
@@ -126,7 +126,6 @@ async function addPaymentHistory(
       // 결제 내역과 예약 정보 업데이트
       await updateDoc(docRef, {
         paymentHistory: paymentHistory, // 결제 내역 업데이트
-        reservationInfo: reservationData, // 예약 정보 저장
       });
       console.log("결제 내역과 예약 정보가 성공적으로 추가되었습니다.");
     } else {
