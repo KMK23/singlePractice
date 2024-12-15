@@ -16,7 +16,6 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (user.isAuthenticated) {
@@ -25,9 +24,9 @@ function LoginPage() {
   }, [user, navigate]);
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // 기본 제출 동작 방지
+    e.preventDefault();
     if (!email || !password) {
-      setErrorMessage("이메일과 비밀번호를 모두 입력해주세요.");
+      alert("이메일과 비밀번호를 모두 입력해주세요.");
       return;
     }
 
@@ -49,7 +48,6 @@ function LoginPage() {
     setIsRegistering(!isRegistering);
     setEmail("");
     setPassword("");
-    setErrorMessage("");
   };
 
   return (
@@ -58,7 +56,6 @@ function LoginPage() {
         <h2 className={styles.title}>
           {isRegistering ? "회원가입 페이지" : "로그인 페이지"}
         </h2>
-        {/* form 태그 추가 */}
         <form onSubmit={handleSubmit}>
           <input
             type="email"
@@ -82,9 +79,8 @@ function LoginPage() {
         {user.status === "loading" && (
           <p className={styles.message}>처리 중...</p>
         )}
-        {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
         {user.status === "failed" && (
-          <p className={styles.errorMessage}>실패: {user.error}</p>
+          <p className={styles.errorMessage}>{user.error}</p>
         )}
 
         <button onClick={toggleMode} className={styles.toggleButton}>
@@ -92,7 +88,7 @@ function LoginPage() {
         </button>
 
         <button onClick={handleGoogleLogin} className={styles.socialButton}>
-          Google로 로그인
+          {isRegistering ? "Google 계정으로 가입" : "Google 계정으로 로그인"}
         </button>
       </div>
     </div>

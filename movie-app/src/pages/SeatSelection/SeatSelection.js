@@ -3,15 +3,14 @@ import styles from "./SeatSelection.module.scss";
 import Button from "../../components/Button/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as PortOne from "https://cdn.portone.io/v2/browser-sdk.esm.js";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchReservedSeats,
-  addSeats,
-} from "../../store/reservationSlice/reservationSlice"; // Redux 액션
-import { addDatas, addPaymentHistory } from "../../firebase"; // Firestore 추가 함수
+  addDatas,
+  addPaymentHistory,
+  getDatas,
+  updateDatas,
+} from "../../firebase"; // Firestore 추가 함수
 import { TextField } from "@mui/material";
 import kroDate from "../../components/korDate/KorDate";
-import { updateDoc } from "firebase/firestore";
 
 function SeatSelection() {
   const rows = Array.from({ length: 10 }, (_, i) =>
@@ -22,35 +21,40 @@ function SeatSelection() {
   const rightCoupleSeats = 4;
 
   const { state } = useLocation(); // 예약 정보 (영화, 장소, 시간 등)
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { reservedSeats } = useSelector((state) => state.reservation); // Redux에서 예약된 좌석 가져오기
-
+  const [reservedSeats, setReservedSeats] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState(""); // 전화번호 상태
 
   // 예약된 좌석 불러오기
   useEffect(() => {
-    const { selectedMovie, selectedDate, selectedTime } = state;
-    dispatch(
-      fetchReservedSeats({
-        collectionName: "reservations",
-        queryOptions: {
-          conditions: [
-            { field: "movieId", operator: "==", value: selectedMovie.id },
-            { field: "date", operator: "==", value: selectedDate },
-            { field: "time", operator: "==", value: selectedTime },
-          ],
-        },
-      })
-    );
-  }, [dispatch, state]);
+    const fetchSeats = async () => {
+      const { selectedMovie, selectedDate, selectedTime } = state;
+
+      const conditions = [
+        { field: "id", operator: "==", value: selectedMovie.id },
+        { field: "selectedDate", operator: "==", value: selectedDate },
+        { field: "selectedTime", operator: "==", value: selectedTime },
+      ];
+
+      try {
+        const data = await getDatas("reservations", { conditions });
+        // 모든 예약된 좌석 데이터 합치기
+        const allReservedSeats = data.flatMap((doc) => doc.selectedSeats || []);
+        setReservedSeats(allReservedSeats); // 상태 업데이트
+      } catch (error) {
+        console.error("예약된 좌석 데이터를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchSeats();
+  }, [state]);
 
   const handleSeatClick = (seat) => {
     if (reservedSeats.includes(seat)) {
-      alert("이 좌석은 이미 예약되었습니다.");
-      return; // 이미 예약된 좌석은 선택 불가
+      alert("이미 예약된 좌석입니다.");
+      return; // 예약된 좌석 클릭 방지
     }
     setSelectedSeats((prevSelectedSeats) =>
       prevSelectedSeats.includes(seat)
@@ -108,85 +112,96 @@ function SeatSelection() {
         email: email,
       };
 
-      console.log("예약 정보:", reservationData);
-
       const paymentInfo = await requestPayment(userId, reservationData);
 
-      if (paymentInfo) {
-        alert("예약이 완료되었습니다.");
-
-        // 예약 정보(reservationInfo)는 'reservations' 컬렉션에 추가
-        const reservationDocRef = await addDatas("reservations", {
-          reservationInfo: {
-            ...reservationData, // reservationData 추가
-          },
-        });
-
-        const reservationDocId = reservationDocRef.id; // Firestore 문서 ID 가져오기
-        console.log("예약 문서 ID:", reservationDocId); // ID가 제대로 출력되는지 확인
-
-        if (reservationDocId) {
-          // reservationData에 reservationDocId를 추가
-          const updatedReservationData = {
-            ...reservationData,
-            reservationDocId: reservationDocId, // reservationDocId를 추가
-          };
-
-          console.log("업데이트된 예약 데이터:", updatedReservationData); // updatedReservationData 확인
-
-          // 결제 내역(paymentHistory)은 'users' 컬렉션에 추가
-          await addPaymentHistory(
-            "users",
-            userId,
-            paymentInfo,
-            updatedReservationData
-          );
-
-          // 예약된 좌석 업데이트
-          await dispatch(
-            addSeats({
-              collectionName: "reservations",
-              docId: reservationDocId,
-              newSeats: [...reservedSeats, ...selectedSeats], // 선택된 좌석만 추가
-            })
-          );
-
-          navigate("/"); // 예약 성공 페이지로 이동
-        }
+      if (!paymentInfo) {
+        // 결제 실패 또는 취소 시 예약 진행하지 않음
+        alert("결제에 실패하였습니다. 다시 시도해주세요.");
+        return;
       }
+
+      alert("예약이 완료되었습니다.");
+
+      // Firestore 문서 생성 및 ID 가져오기
+      const reservationDocRef = await addDatas("reservations", reservationData); // 문서 생성
+      const docId = reservationDocRef.id; // Firestore 문서 ID 가져오기
+
+      // 문서 ID를 포함한 데이터 생성
+      const updatedReservationData = {
+        ...reservationData,
+        docId, // 문서 ID 추가
+      };
+
+      // Firestore 문서를 업데이트하여 문서 ID 저장
+      await updateDatas("reservations", docId, updatedReservationData);
+
+      // 결제 내역 저장
+      await addPaymentHistory(
+        "users",
+        userId,
+        paymentInfo,
+        updatedReservationData
+      );
+
+      navigate("/"); // 예약 성공 페이지로 이동
     } else {
       console.error("사용자 정보가 없습니다.");
     }
   };
 
-  const requestPayment = async (userId, reservationData) => {
-    const response = await PortOne.requestPayment({
-      storeId: process.env.REACT_APP_STOREID,
-      paymentId: `movie-${Date.now()}`,
-      orderName: `영화 ${reservationData.title} 예약`,
-      totalAmount: reservationData.price,
-      currency: "KRW",
-      payMethod: "CARD",
-      channelKey: process.env.REACT_APP_CHANNELKEY,
-      customer: {
-        phoneNumber: reservationData.phone,
-        fullName: reservationData.name,
-        email: JSON.parse(localStorage.getItem("user")).email,
-      },
-      redirectUrl: "localhost:3000", // 결제 후 리디렉션 URL
-    });
+  const cancelReservation = (reservationId) => {
+    // 예매 상태를 취소하는 로직
+    console.log(`예매 ${reservationId} 취소`);
+    // 실제로 상태 변경하는 로직을 여기에 추가
+  };
 
-    if (response && response.txId) {
-      return {
-        paymentDate: kroDate(),
-        amount: reservationData.price,
-        paymentId: response.paymentId,
-      };
-    } else {
-      console.error("결제 실패");
+  const requestPayment = async (userId, reservationData) => {
+    console.log("결제 요청 시작", reservationData);
+
+    try {
+      const response = await PortOne.requestPayment({
+        storeId: process.env.REACT_APP_STOREID,
+        paymentId: JSON.parse(localStorage.getItem("user")).email,
+        orderName: `영화 ${reservationData.title} 예약`,
+        totalAmount: reservationData.price,
+        currency: "KRW",
+        payMethod: "CARD",
+        channelKey: process.env.REACT_APP_CHANNELKEY,
+        customer: {
+          phoneNumber: reservationData.phone,
+          fullName: reservationData.name,
+          email: JSON.parse(localStorage.getItem("user")).email,
+        },
+        redirectUrl: "localhost:3000",
+      });
+
+      console.log("결제 응답:", response);
+
+      // 결제 실패인 경우 처리
+      if (response.code === "FAILURE_TYPE_PG") {
+        console.error("결제 실패:", response.message);
+        alert("결제에 실패했습니다. 다시 시도해주세요.");
+        cancelReservation(reservationData.reservationId); // 결제 실패 시 예매 취소
+        return null; // 결제 실패시 더 이상 진행하지 않음
+      }
+
+      if (response && response.txId) {
+        return {
+          paymentDate: kroDate(),
+          amount: reservationData.price,
+          paymentId: response.paymentId,
+        };
+      } else {
+        console.error("결제 취소 또는 오류 발생");
+        return null;
+      }
+    } catch (error) {
+      console.error("결제 요청 중 오류 발생:", error);
+      cancelReservation(reservationData.reservationId); // 결제 중 오류 발생 시 예매 취소
       return null;
     }
   };
+
   return (
     <div className={styles.SeatSelectionContainer}>
       <h1>좌석 선택</h1>
@@ -207,7 +222,7 @@ function SeatSelection() {
           label="전화번호"
           variant="outlined"
           value={phone}
-          onChange={handlePhoneChange} // 전화번호 입력 변화 처리
+          onChange={handlePhoneChange}
           fullWidth
           margin="normal"
           placeholder="숫자만 입력 (예: 010-1234-5678)"
@@ -217,24 +232,24 @@ function SeatSelection() {
 
       {/* 좌석 선택 UI */}
       <div className={styles.Screen}>스크린</div>
-      <div className={styles.EntryExit}>
-        <span className={styles.Entry}>입구</span>
-        <span className={styles.Exit}>출구</span>
-      </div>
-      <div className={styles.AisleSpace} />
       <div className={styles.SeatGrid}>
         {rows.map((row) => (
           <div key={row} className={styles.Row}>
             {[...Array(leftCoupleSeats)].map((_, i) => {
               const seat = `${row}${i + 1}`;
+              const isReserved = reservedSeats.includes(seat);
               const isSelected = selectedSeats.includes(seat);
               return (
                 <div
                   key={seat}
                   className={`${styles.Seat} ${
-                    isSelected ? styles.selected : ""
+                    isReserved
+                      ? styles.reserved
+                      : isSelected
+                      ? styles.selected
+                      : ""
                   }`}
-                  onClick={() => handleSeatClick(seat)}
+                  onClick={() => !isReserved && handleSeatClick(seat)}
                 >
                   {seat}
                 </div>
@@ -243,14 +258,19 @@ function SeatSelection() {
             <div className={styles.VerticalAisle} />
             {[...Array(centerSeats)].map((_, i) => {
               const seat = `${row}${i + leftCoupleSeats + 1}`;
+              const isReserved = reservedSeats.includes(seat);
               const isSelected = selectedSeats.includes(seat);
               return (
                 <div
                   key={seat}
                   className={`${styles.Seat} ${
-                    isSelected ? styles.selected : ""
+                    isReserved
+                      ? styles.reserved
+                      : isSelected
+                      ? styles.selected
+                      : ""
                   }`}
-                  onClick={() => handleSeatClick(seat)}
+                  onClick={() => !isReserved && handleSeatClick(seat)}
                 >
                   {seat}
                 </div>
@@ -259,14 +279,19 @@ function SeatSelection() {
             <div className={styles.VerticalAisle} />
             {[...Array(rightCoupleSeats)].map((_, i) => {
               const seat = `${row}${i + leftCoupleSeats + centerSeats + 1}`;
+              const isReserved = reservedSeats.includes(seat);
               const isSelected = selectedSeats.includes(seat);
               return (
                 <div
                   key={seat}
                   className={`${styles.Seat} ${
-                    isSelected ? styles.selected : ""
+                    isReserved
+                      ? styles.reserved
+                      : isSelected
+                      ? styles.selected
+                      : ""
                   }`}
-                  onClick={() => handleSeatClick(seat)}
+                  onClick={() => !isReserved && handleSeatClick(seat)}
                 >
                   {seat}
                 </div>
@@ -279,10 +304,10 @@ function SeatSelection() {
         <h2>선택된 좌석: {selectedSeats.join(", ") || "없음"}</h2>
       </div>
 
-      {/* 결제하기 버튼 */}
       <Button
         onClick={handleSubmit}
         disabled={!name || !phone || selectedSeats.length === 0}
+        className={styles.reservBtn}
       >
         결제하기
       </Button>

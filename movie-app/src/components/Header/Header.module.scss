@@ -11,6 +11,7 @@
     flex: 1;
     display: flex;
     justify-content: center; // 제목을 중앙에 배치
+    cursor: pointer;
     .headerTitle {
       font-size: 2.8rem; // 제목 폰트 크기 증가
       color: #ff4757; // 강조된 색상

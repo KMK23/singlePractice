@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getDatas, updateDatas } from "../../firebase";
+import { getDatas } from "../../firebase";
 
 // 초기 상태
 const initialState = {
@@ -9,7 +9,6 @@ const initialState = {
   selectedDate: "",
   selectedTime: null,
   selectedSeats: [],
-  reservedSeats: [], // 예약된 좌석
   status: "idle",
   error: null,
 };
@@ -20,26 +19,13 @@ const fetchReservedSeats = createAsyncThunk(
   async ({ collectionName, queryOptions }) => {
     try {
       const resultData = await getDatas(collectionName, queryOptions);
-      // 결과 데이터는 Firestore 문서 배열 형태이므로 필요한 좌석만 추출
-      return resultData[0]?.reservedSeats || [];
+      // 모든 문서의 selectedSeats를 합쳐서 예약된 좌석 리스트 반환
+      const reservedSeats = resultData.reduce((acc, doc) => {
+        return [...acc, ...doc.selectedSeats];
+      }, []);
+      return reservedSeats;
     } catch (error) {
       console.error("Error fetching reserved seats:", error);
-      throw error;
-    }
-  }
-);
-
-// Firestore에 예약된 좌석 추가
-const addSeats = createAsyncThunk(
-  "reservation/addSeats",
-  async ({ collectionName, docId, newSeats }) => {
-    try {
-      const resultData = await updateDatas(collectionName, docId, {
-        reservedSeats: newSeats,
-      });
-      return resultData.reservedSeats; // 업데이트된 좌석 반환
-    } catch (error) {
-      console.error("Error adding seats:", error);
       throw error;
     }
   }
@@ -77,20 +63,9 @@ const reservationSlice = createSlice({
       })
       .addCase(fetchReservedSeats.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.reservedSeats = action.payload;
+        state.selectedSeats = action.payload; // 예약된 좌석을 상태에 저장
       })
       .addCase(fetchReservedSeats.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(addSeats.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(addSeats.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.reservedSeats = action.payload;
-      })
-      .addCase(addSeats.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
@@ -105,9 +80,7 @@ export const {
   selectTime,
   selectSeats,
   resetReservation,
-  addReservation,
 } = reservationSlice.actions;
 
-// export const { selectMovie, selectRegion, selectTheater, selectDate, selectTime, selectSeats, resetReservation } = reservationSlice.actions;
 export default reservationSlice.reducer;
-export { addSeats, fetchReservedSeats };
+export { fetchReservedSeats };

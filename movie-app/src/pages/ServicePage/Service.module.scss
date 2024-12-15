@@ -1,0 +1,144 @@
+.serviceContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+
+  .pageTitle {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #343a40;
+    text-align: center;
+  }
+
+  .navMenu {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .navButton {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .navButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+  }
+
+  .sectionContent {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 30px;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #495057;
+    text-align: center;
+  }
+
+  .faqList,
+  .noticeList {
+    list-style: none;
+    padding: 0;
+  }
+
+  .faqItem,
+  .noticeItem {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 10px;
+  }
+
+  .faqItem summary,
+  .noticeItem summary {
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #343a40;
+  }
+
+  .faqItem p,
+  .noticeItem p {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #495057;
+    line-height: 1.6;
+  }
+
+  .createChatRoomButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .createChatRoomButton:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+  }
+
+  .termsContent {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    background: #f8f9fa;
+    word-break: keep-all; /* 한글 단어 단위 개행 */
+    overflow-wrap: break-word; /* 긴 단어 개행 */
+    line-height: 1.8;
+  }
+
+  .termsContent h3 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #343a40;
+  }
+
+  .termsContent p {
+    font-size: 1rem;
+    color: #495057;
+  }
+
+  .searchInput {
+    width: 100%;
+    max-width: 600px;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    transition: box-shadow 0.3s;
+  }
+
+  .searchInput:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+  }
+}

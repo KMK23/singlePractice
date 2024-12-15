@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser, selectUser } from "../../store/userSlice/userSlice";
@@ -9,7 +9,6 @@ function Header() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser); // Redux 상태에서 user 정보 가져오기
   const isLoggedIn = useSelector((state) => state.user.isAuthenticated);
-  console.log(user);
   const navigate = useNavigate();
   useEffect(() => {}, [user]);
 
@@ -36,10 +35,16 @@ function Header() {
     }
   };
 
+  const home = () => {
+    navigate("/");
+  };
+
   return (
     <div className={styles.headerContainer}>
       <div className={styles.headerTitleBox}>
-        <h1 className={styles.headerTitle}>MOVIE-APP</h1>
+        <h1 className={styles.headerTitle} onClick={home}>
+          MOVIE-APP
+        </h1>
       </div>
       <div className={styles.menuContainer}>
         <div className={styles.menuBtn}>

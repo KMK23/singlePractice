@@ -1,0 +1,123 @@
+.adminContainer {
+  padding: 2rem;
+
+  .reservationsContainer {
+    margin-top: 2rem;
+  }
+
+  .reservationList {
+    margin-top: 1rem;
+    padding-left: 2rem;
+    border-left: 0.2rem solid #4caf50;
+  }
+
+  .movieItem {
+    margin-bottom: 1.5rem;
+  }
+
+  .movieButton {
+    background-color: #4caf50;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    cursor: pointer;
+    font-size: 1.6rem;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #45a049;
+    }
+  }
+
+  .reservationItem {
+    margin-bottom: 1rem;
+  }
+
+  .reservationItem strong {
+    font-weight: bold;
+  }
+
+  .chatList {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .chatRoomItem {
+    margin-bottom: 1rem;
+  }
+
+  .chatRoomButton {
+    background-color: #2196f3;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    cursor: pointer;
+    font-size: 1.6rem;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #1976d2;
+    }
+  }
+
+  .startChatButton {
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.6rem;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #45a049;
+    }
+  }
+
+  .logoutButton {
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.6rem;
+
+    &:hover {
+      background-color: #d32f2f;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .adminContainer {
+    padding: 1.5rem;
+
+    .movieButton,
+    .chatRoomButton,
+    .startChatButton,
+    .logoutButton {
+      padding: 1rem 1.5rem;
+      font-size: 1.4rem;
+    }
+
+    .reservationList {
+      padding-left: 1.5rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .adminContainer {
+    padding: 1rem;
+
+    .movieButton,
+    .chatRoomButton,
+    .startChatButton,
+    .logoutButton {
+      padding: 1rem;
+      font-size: 1.2rem;
+    }
+  }
+}

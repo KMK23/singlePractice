@@ -1,3 +1,4 @@
+// Reservation.js
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./Reservation.module.scss";
@@ -37,8 +38,6 @@ function Reservation() {
   const [selectedMovieLocal, setSelectedMovieLocal] = useState(
     selectedMovie || {}
   );
-  // console.log(selectedMovie);
-  // 영화 전체가 나오고있네?
 
   useEffect(() => {
     dispatch(fetchMovies());
@@ -73,14 +72,16 @@ function Reservation() {
           selectedTheater={selectedTheater}
           setSelectedTheater={(theater) => dispatch(selectTheater(theater))}
         />
-        <DateSelection
-          selectedDate={selectedDate}
-          setSelectedDate={(date) => dispatch(selectDate(date))}
-        />
-        <TimeSelection
-          selectedTime={selectedTime}
-          setSelectedTime={(time) => dispatch(selectTime(time))}
-        />
+        <div className="dateTimeSelect">
+          <DateSelection
+            selectedDate={selectedDate}
+            setSelectedDate={(date) => dispatch(selectDate(date))}
+          />
+          <TimeSelection
+            selectedTime={selectedTime}
+            setSelectedTime={(time) => dispatch(selectTime(time))}
+          />
+        </div>
       </div>
 
       {isAllSelected && (
@@ -94,8 +95,9 @@ function Reservation() {
               selectedDate,
               selectedTime,
             }}
+            className={styles.seatSelectLink} // Link에 클래스 추가
           >
-            <button>좌석선택하기</button>
+            <button className={styles.seatSeletBtn}>좌석선택하기</button>
           </Link>
         </div>
       )}

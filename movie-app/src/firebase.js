@@ -9,8 +9,11 @@ import {
   getDocs,
   getFirestore,
   limit,
+  onSnapshot,
   orderBy,
   query,
+  serverTimestamp,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -77,8 +80,21 @@ async function addDatas(collectionName, dataObj) {
 
 async function updateDatas(collectionName, docId, updateObj) {
   try {
+    // docId와 updateObj 검증
+    if (!docId || typeof docId !== "string") {
+      throw new Error("유효하지 않은 docId입니다.");
+    }
+    if (
+      !updateObj ||
+      typeof updateObj !== "object" ||
+      Array.isArray(updateObj)
+    ) {
+      throw new Error("updateObj는 객체 형태여야 합니다.");
+    }
+
     const docRef = doc(db, collectionName, docId);
     await updateDoc(docRef, updateObj);
+
     const snapshot = await getDoc(docRef);
 
     if (!snapshot.exists()) {
@@ -136,6 +152,75 @@ async function addPaymentHistory(
   }
 }
 
+async function getFaqs() {
+  return await getDatas("faq", {});
+}
+
+async function getTerms() {
+  return await getDatas("terms", {});
+}
+
+async function getNotices() {
+  return await getDatas("notices", {});
+}
+
+const getMessages = (chatRoomId, setMessagesData) => {
+  const messagesRef = collection(db, "chats", chatRoomId, "messages");
+  const q = query(messagesRef, orderBy("timestamp"));
+
+  // 실시간으로 메시지 데이터를 가져오기
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const messages = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setMessagesData(messages); // 데이터 상태 업데이트
+  });
+
+  return unsubscribe; // 언마운트 시 구독 해제
+};
+
+const sendMessage = async (
+  chatRoomId,
+  userEmail,
+  message,
+  isAdminMessage = false
+) => {
+  try {
+    const messagesRef = collection(db, "chats", chatRoomId, "messages");
+    await addDoc(messagesRef, {
+      sender: userEmail,
+      message,
+      timestamp: new Date(),
+      isAdminMessage, // 관리자 메시지 여부 구분
+    });
+  } catch (e) {
+    console.error("Error sending message: ", e);
+  }
+};
+
+const createChatRoom = async (userEmail) => {
+  try {
+    const chatRoomRef = await addDoc(collection(db, "chats"), {
+      createdBy: userEmail,
+      createdAt: new Date(),
+      // 필요하다면 초기 데이터 추가
+    });
+    return chatRoomRef.id; // 새 채팅방 ID 반환
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+};
+
+const updateChatRoom = async (chatRoomId, data) => {
+  try {
+    const chatRoomRef = doc(db, "chats", chatRoomId);
+    await updateDoc(chatRoomRef, data);
+  } catch (error) {
+    console.error("Error updating chat room:", error);
+  }
+};
+
 export {
   auth,
   db,
@@ -145,4 +230,11 @@ export {
   updateDatas,
   deleteDatas,
   addPaymentHistory,
+  getFaqs,
+  getTerms,
+  getNotices,
+  getMessages,
+  sendMessage,
+  createChatRoom,
+  updateChatRoom,
 };

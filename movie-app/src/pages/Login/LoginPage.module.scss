@@ -4,51 +4,62 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #000;
+  background-color: #121212; // 어두운 배경으로 변경
   color: #fff;
+  font-family: "Arial", sans-serif;
+
   .formContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #1a1a1a;
-    padding: 2rem;
-    border-radius: 10px;
+    padding: 2.5rem;
+    border-radius: 12px;
     width: 90%;
     max-width: 400px;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
   }
 
   .title {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
     color: #ffffff;
+    text-align: center;
   }
 
   .input {
     width: 100%;
-    padding: 0.8rem;
-    margin: 0.5rem 0;
+    padding: 0.9rem;
+    margin: 0.8rem 0;
     border: 1px solid #333;
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: #333;
     color: #fff;
     font-size: 1rem;
+    transition: all 0.3s ease-in-out;
   }
 
   .input::placeholder {
     color: #bbb;
   }
 
+  .input:focus {
+    border-color: #4caf50;
+    outline: none;
+  }
+
   .button {
     width: 100%;
-    padding: 0.8rem;
-    margin-top: 1rem;
+    padding: 0.9rem;
+    margin-top: 1.5rem;
     background-color: #4caf50;
     color: #fff;
     font-size: 1rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
   }
 
   .button:hover {
@@ -61,7 +72,8 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 1rem;
+    transition: color 0.3s ease;
   }
 
   .toggleButton:hover {
@@ -71,12 +83,42 @@
   .message {
     color: #ffffff;
     font-size: 0.9rem;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    text-align: center;
   }
 
   .errorMessage {
     color: #ff4444;
     font-size: 0.9rem;
     margin-top: 1rem;
+    text-align: center;
+  }
+
+  .socialButton {
+    width: 100%;
+    padding: 0.9rem;
+    margin-top: 1.5rem;
+    color: black;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .socialButton:hover {
+    background-color: #333; // 구글 로그인 버튼 hover 색상
+  }
+
+  .socialButton i {
+    margin-right: 0.8rem;
+  }
+
+  .socialButton span {
+    font-size: 1.1rem;
+    font-weight: 600;
   }
 }

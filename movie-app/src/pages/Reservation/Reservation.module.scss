@@ -1,23 +1,38 @@
+/* Reservation.module.scss */
 .ReservationContainer {
-  max-width: 75rem;
+  max-width: 80rem; /* 전체 너비를 넓혔습니다 */
   margin: 10rem auto;
-  background-color: #1e1e1e;
+  background: linear-gradient(
+    135deg,
+    #333 0%,
+    #555 100%
+  ); /* 어두운 그라디언트 배경 */
   color: white;
-  border-radius: 10px;
+  border-radius: 15px;
   padding: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   h1 {
     text-align: center;
     margin-bottom: 2rem;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ffffff;
   }
 
   .ReservationSteps {
     display: flex;
     gap: 2rem;
-    flex-wrap: wrap;
     justify-content: space-between;
+    width: 100%;
+    max-width: 70rem; /* max-width를 늘려서 더 넓은 공간을 확보 */
+    flex-wrap: wrap; /* 항목들이 넘어갈 경우 줄 바꿈을 하도록 설정 */
+    margin-bottom: 2rem; /* 항목 간의 간격 */
   }
 
   .ReservationButton {
@@ -25,13 +40,77 @@
     justify-content: center;
     align-items: center;
     width: fit-content;
-    background-color: white;
-    border-radius: 8px; /* 버튼 스타일 변경 */
+    margin: 2rem auto 0;
     padding: 1rem;
-    margin: 2rem auto 0; /* 버튼을 중앙 정렬하고 간격 조정 */
+  }
 
-    button {
-      color: black;
+  .seatSeletBtn {
+    padding: 1rem 2rem;
+    background-color: #ff5f00; /* 버튼 배경 색상 - 오렌지 계열 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background-color: #ff4500; /* hover 시 더 강렬한 오렌지 */
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(1);
+    }
+  }
+
+  .seatSelectLink {
+    text-decoration: none;
+  }
+
+  /* 반응형 디자인 */
+  @media (max-width: 768px) {
+    .ReservationContainer {
+      padding: 1rem;
+      margin: 5rem auto;
+    }
+
+    .ReservationSteps {
+      gap: 1.5rem;
+      flex-direction: column; /* 작은 화면에서는 세로로 배치 */
+      align-items: center;
+      width: 100%;
+    }
+
+    .seatSeletBtn {
+      width: 100%; /* 버튼이 전체 너비를 차지하게 설정 */
+      padding: 1rem;
+      font-size: 1rem; /* 작은 화면에서 글자 크기 줄임 */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .ReservationContainer {
+      margin: 3rem auto;
+      padding: 1rem;
+    }
+
+    /* 날짜선택, 시간선택 항목을 가로로 배치 */
+    .ReservationSteps .dateTimeSelect {
+      display: flex;
+      gap: 1rem; /* 날짜와 시간 선택 사이에 간격 */
+      width: 100%;
+    }
+
+    .seatSeletBtn {
+      padding: 1rem 1.5rem; /* 모바일에서 버튼 크기 축소 */
+      font-size: 1rem;
+    }
+
+    h1 {
+      font-size: 2rem; /* 작은 화면에서 제목 크기 축소 */
     }
   }
 }

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "faq1",
+    "question": "영화 예매를 취소하려면 어떻게 하나요?",
+    "answer": "마이페이지에서 예매 취소가 가능합니다.",
+    "category": "취소/환불",
+    "isPopular": true,
+    "updatedAt": "2024-12-10"
+  },
+  {
+    "id": "faq2",
+    "question": "결제 후 영수증은 어디서 확인할 수 있나요?",
+    "answer": "결제 후 이메일로 영수증이 발송되며, 마이페이지에서도 확인 가능합니다.",
+    "category": "결제",
+    "isPopular": false,
+    "updatedAt": "2024-12-12"
+  },
+  {
+    "id": "faq3",
+    "question": "예매한 티켓을 다른 사람에게 양도할 수 있나요?",
+    "answer": "마이페이지의 예매 내역에서 양도 옵션을 선택하시면 됩니다.",
+    "category": "영화 예매",
+    "isPopular": true,
+    "updatedAt": "2024-12-14"
+  }
+]
