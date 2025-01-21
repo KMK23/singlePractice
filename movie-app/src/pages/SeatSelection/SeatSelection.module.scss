@@ -26,13 +26,15 @@ h1 {
 
 .Screen {
   background-color: #666;
-  color: #fff;
-  font-size: 1.2rem;
-  padding: 0.8rem;
-  border-radius: 5px;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 1rem;
+  border-radius: 8px;
   margin-bottom: 1.5rem;
   text-align: center;
   width: 100%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .AisleSpace {
@@ -57,11 +59,11 @@ h1 {
 .Seat {
   background-color: #444;
   color: white;
-  padding: 0.8rem;
+  padding: 1rem; /* 좌석 크기 확대 */
   text-align: center;
-  border-radius: 5px;
+  border-radius: 8px; /* 둥근 모서리 */
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s;
 
   &.reserved {
     background-color: red; /* 예약된 좌석 색상 */
@@ -75,6 +77,7 @@ h1 {
 
   &:hover {
     background-color: #555;
+    transform: scale(1.1); /* 선택 전 확대 효과 */
   }
 }
 
@@ -94,16 +97,19 @@ h1 {
 .EntryExit {
   display: flex;
   justify-content: space-between;
-  padding: 1rem 0;
-  font-size: 1.2rem;
-  color: white;
+  align-items: center;
+  margin: 1rem 0;
+  font-size: 1rem;
 }
 
 .Entry,
 .Exit {
-  background-color: green;
+  background-color: #3498db; /* 입구/출구 색상 */
+  color: white;
+  font-weight: bold;
   padding: 0.5rem 1rem;
-  border-radius: 5px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .Entry {

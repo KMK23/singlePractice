@@ -230,8 +230,12 @@ function SeatSelection() {
         />
       </div>
 
-      {/* 좌석 선택 UI */}
       <div className={styles.Screen}>스크린</div>
+
+      <div className={styles.EntryExit}>
+        <div className={styles.Entry}>입구</div>
+      </div>
+
       <div className={styles.SeatGrid}>
         {rows.map((row) => (
           <div key={row} className={styles.Row}>
@@ -300,6 +304,11 @@ function SeatSelection() {
           </div>
         ))}
       </div>
+
+      <div className={styles.EntryExit}>
+        <div className={styles.Exit}>출구</div>
+      </div>
+
       <div className={styles.SelectedSeats}>
         <h2>선택된 좌석: {selectedSeats.join(", ") || "없음"}</h2>
       </div>
